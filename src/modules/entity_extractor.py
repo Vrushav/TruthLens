@@ -14,7 +14,7 @@ class EntityExtractor:
     Extract named entities from claims.
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """
         Load spaCy English model.
         """
