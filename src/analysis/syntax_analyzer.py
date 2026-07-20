@@ -1,5 +1,6 @@
 import ast
 
+from src.analysis.issue_factory import IssueFactory
 from src.models.code_block import CodeBlock
 from src.models.issue import Issue
 from src.models.enums.analyzer_type import AnalyzerType
@@ -24,21 +25,11 @@ class SyntaxAnalyzer(Analyzer):
 
         except SyntaxError as e:
             issues.append(
-              Issue(
-                  id="SYN001",
-                  analyzer=AnalyzerType.SYNTAX,
-                  severity=Severity.HIGH,
-                  category=Category.SYNTAX,
-                  title="Syntax Error",
-                  message=e.msg,
-                  recommendation="Fix the syntax error before executing the code.",
-                  line=e.lineno,
-                  confidence=1.0,
-                  references=[
-                      "Python Language Reference",
-                      "ast.parse"
-                  ]
-            )
-)
+              IssueFactory.create(
+                    "SYN001",
+                    message=e.msg,
+                  line=e.lineno
+             )
+        )
 
         return issues
