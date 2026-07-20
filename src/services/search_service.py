@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 from dotenv import load_dotenv
 from tavily import TavilyClient
 
-from src.models.evidence import Evidence
+from src.models.verification.evidence import Evidence
 
 load_dotenv()
 

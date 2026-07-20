@@ -1,4 +1,4 @@
-from src.models.issue import Issue
+from src.models.analysis.issue import Issue
 from src.rules.rule_registry import RULES
 
 

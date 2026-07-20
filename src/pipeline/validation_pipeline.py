@@ -1,4 +1,4 @@
-from src.models.claim import Claim
+from src.models.verification.claim import Claim
 from src.verification.parser import ResponseParser
 from src.verification.entity_extractor import EntityExtractor
 from src.verification.technology_detector import TechnologyDetector

@@ -2,7 +2,7 @@ import ast
 
 from src.analysis.analyzer import Analyzer
 from src.analysis.issue_factory import IssueFactory
-from src.models.code_block import CodeBlock
+from src.models.analysis.code_block import CodeBlock
 from src.rules.python_api_rules import PYTHON_API_RULES
 
 

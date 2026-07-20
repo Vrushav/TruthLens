@@ -1,5 +1,5 @@
 from sentence_transformers import SentenceTransformer, util
-from src.models.claim import Claim
+from src.models.verification.claim import Claim
 
 
 class SemanticVerifier:

@@ -1,5 +1,5 @@
 from src.analysis.syntax_analyzer import SyntaxAnalyzer
-from src.models.code_block import CodeBlock
+from src.models.analysis.code_block import CodeBlock
 from src.models.enums.category import Category
 
 def test_valid_python():

@@ -2,8 +2,8 @@ import json
 import re
 from pathlib import Path
 
-from src.models.claim import Claim
-from src.models.entity import Entity
+from src.models.verification.claim import Claim
+from src.models.verification.entity import Entity
 
 
 class TechnologyDetector:

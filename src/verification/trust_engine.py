@@ -1,5 +1,5 @@
-from src.models.claim import Claim
-from src.models.trust_result import TrustResult
+from src.models.verification.claim import Claim
+from src.models.verification.trust_result import TrustResult
 
 
 class TrustEngine:

@@ -1,6 +1,6 @@
 from src.analysis.analysis_engine import AnalysisEngine
 from src.analysis.syntax_analyzer import SyntaxAnalyzer
-from src.models.code_block import CodeBlock
+from src.models.analysis.code_block import CodeBlock
 from src.models.enums.category import Category
 from src.analysis.runtime_analyzer import RuntimeAnalyzer
 from src.analysis.security_analyzer import SecurityAnalyzer

@@ -1,7 +1,7 @@
 from abc import ABC, abstractmethod
 
-from src.models.code_block import CodeBlock
-from src.models.issue import Issue
+from src.models.analysis.code_block import CodeBlock
+from src.models.analysis.issue import Issue
 
 
 class Analyzer(ABC):

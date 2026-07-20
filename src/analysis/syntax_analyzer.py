@@ -1,8 +1,8 @@
 import ast
 
 from src.analysis.issue_factory import IssueFactory
-from src.models.code_block import CodeBlock
-from src.models.issue import Issue
+from src.models.analysis.code_block import CodeBlock
+from src.models.analysis.issue import Issue
 from src.models.enums.analyzer_type import AnalyzerType
 from src.models.enums.category import Category
 from src.models.enums.severity import Severity

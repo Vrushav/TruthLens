@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 from typing import List
 
-from .issue import Issue
+from .analysis.issue import Issue
 
 
 @dataclass

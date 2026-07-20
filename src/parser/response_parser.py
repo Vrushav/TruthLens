@@ -1,7 +1,7 @@
 import re
 
-from src.models.response import Response
-from src.models.code_block import CodeBlock
+from src.models.analysis.response import Response
+from src.models.analysis.code_block import CodeBlock
 from src.parser.language_detector import LanguageDetector
 
 

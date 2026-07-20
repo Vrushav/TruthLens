@@ -1,5 +1,5 @@
-from src.models.claim import Claim
-from src.models.entity import Entity
+from src.models.verification.claim import Claim
+from src.models.verification.entity import Entity
 from src.verification.query_builder import QueryBuilder
 
 

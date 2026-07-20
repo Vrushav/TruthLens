@@ -1,4 +1,4 @@
-from src.models.claim import Claim
+from src.models.verification.claim import Claim
 from src.verification.query_builder import QueryBuilder
 from src.services.search_service import SearchService
 

@@ -1,5 +1,5 @@
 from src.analysis.hallucination_analyzer import HallucinationAnalyzer
-from src.models.code_block import CodeBlock
+from src.models.analysis.code_block import CodeBlock
 from src.models.enums.category import Category
 
 

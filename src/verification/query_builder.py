@@ -1,4 +1,4 @@
-from src.models.claim import Claim
+from src.models.verification.claim import Claim
 
 
 class QueryBuilder:
