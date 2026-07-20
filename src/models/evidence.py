@@ -11,3 +11,5 @@ class Evidence:
     url: str
     snippet: str
     source: str
+    relevance_score: float = 0.0      # ranking score
+    similarity_score: float = 0.0     # semantic similarity

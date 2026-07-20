@@ -1,6 +1,6 @@
 from src.models.claim import Claim
 from src.models.entity import Entity
-from src.modules.query_builder import QueryBuilder
+from src.verification.query_builder import QueryBuilder
 
 
 builder = QueryBuilder()

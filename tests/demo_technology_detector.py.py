@@ -1,8 +1,8 @@
 from src.models.claim import Claim
-from src.modules.technology_detector import TechnologyDetector
+from src.verification.technology_detector import TechnologyDetector
 
 
-def test_claim(text: str):
+def run_claim(text: str):
     detector = TechnologyDetector()
 
     claim = Claim(text=text)
@@ -17,12 +17,9 @@ def test_claim(text: str):
 
 
 def main():
-    test_claim("Python and React were developed using Git.")
-
-    test_claim("GitHub uses PostgreSQL with Node.js.")
-
-    test_claim("Google developed Gemini.")
-
+    run_claim("Python and React were developed using Git.")
+    run_claim("GitHub uses PostgreSQL with Node.js.")
+    run_claim("Google developed Gemini.")
 
 if __name__ == "__main__":
     main()

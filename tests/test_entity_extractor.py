@@ -1,5 +1,5 @@
 from src.models import Claim
-from src.modules.entity_extractor import EntityExtractor
+from src.verification.entity_extractor import EntityExtractor
 
 extractor = EntityExtractor()
 

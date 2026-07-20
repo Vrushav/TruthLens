@@ -1,4 +1,4 @@
-from src.modules.parser import ResponseParser
+from src.verification.parser import ResponseParser
 
 parser = ResponseParser()
 
