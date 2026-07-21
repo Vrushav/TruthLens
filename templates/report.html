@@ -39,7 +39,7 @@
                 </span>
 
                 <div class="trust-score">
-                    55.00/100
+                    {{TRUST_SCORE}}
                 </div>
 
             </div>
@@ -50,8 +50,8 @@
                     Production Ready
                 </span>
 
-                <div class="not-ready">
-                    NO
+                <div class="{{READY_CLASS}}">
+                    {{PRODUCTION_READY}}
                 </div>
 
             </div>
@@ -63,7 +63,7 @@
                 </span>
 
                 <div class="issue-count">
-                    3
+                    {{TOTAL_ISSUES}}
                 </div>
 
             </div>
@@ -82,7 +82,7 @@
             </p>
 
             <div class="trust-display">
-                55.00/100
+                {{TRUST_SCORE}}
             </div>
 
         </section>
@@ -96,34 +96,7 @@
                 Distribution of issues detected during analysis.
             </p>
 
-            
-<table>
-<tr>
-<th>Severity</th>
-<th>Count</th>
-</tr>
-
-<tr>
-<td>🔴 CRITICAL</td>
-<td>0</td>
-</tr>
-
-<tr>
-<td>🟠 HIGH</td>
-<td>3</td>
-</tr>
-
-<tr>
-<td>🟡 MEDIUM</td>
-<td>0</td>
-</tr>
-
-<tr>
-<td>🔵 LOW</td>
-<td>0</td>
-</tr>
-</table>
-
+            {{SUMMARY_TABLE}}
 
         </section>
 
@@ -139,115 +112,7 @@
 
             <div class="issues-container">
 
-                
-<div class="issue high">
-
-<h3>HIGH • Hardcoded Credential</h3>
-
-<p>
-<strong>Analyzer:</strong>
-SECURITY
-</p>
-
-<p>
-<strong>Category:</strong>
-SECURITY
-</p>
-
-<p>
-<strong>Line:</strong>
-4
-</p>
-
-<p>
-<strong>Confidence:</strong>
-1.00
-</p>
-
-<p>
-<strong>Description:</strong><br>
-A hardcoded credential was detected in the source code.
-</p>
-
-<p>
-<strong>Recommendation:</strong><br>
-Store credentials in environment variables or a secure secret manager instead of embedding them in code.
-</p>
-
-</div>
-
-<div class="issue high">
-
-<h3>HIGH • Use of os.system()</h3>
-
-<p>
-<strong>Analyzer:</strong>
-SECURITY
-</p>
-
-<p>
-<strong>Category:</strong>
-SECURITY
-</p>
-
-<p>
-<strong>Line:</strong>
-6
-</p>
-
-<p>
-<strong>Confidence:</strong>
-1.00
-</p>
-
-<p>
-<strong>Description:</strong><br>
-os.system() executes shell commands and may lead to command injection.
-</p>
-
-<p>
-<strong>Recommendation:</strong><br>
-Prefer subprocess.run() without shell=True or safer APIs.
-</p>
-
-</div>
-
-<div class="issue high">
-
-<h3>HIGH • Weak MD5 Hash Algorithm</h3>
-
-<p>
-<strong>Analyzer:</strong>
-SECURITY
-</p>
-
-<p>
-<strong>Category:</strong>
-SECURITY
-</p>
-
-<p>
-<strong>Line:</strong>
-8
-</p>
-
-<p>
-<strong>Confidence:</strong>
-1.00
-</p>
-
-<p>
-<strong>Description:</strong><br>
-MD5 is cryptographically broken and should not be used for security-sensitive purposes.
-</p>
-
-<p>
-<strong>Recommendation:</strong><br>
-Use SHA-256, SHA-3, or another modern cryptographic hash function instead.
-</p>
-
-</div>
-
+                {{ISSUES}}
 
             </div>
 

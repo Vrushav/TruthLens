@@ -1,176 +1,306 @@
 # 🔍 TruthLens
 
-> **AI-powered Hallucination & Trust Validator using Retrieval-Augmented Validation**
+> **An AI-powered toolkit for secure code analysis and AI response validation.**
 
-TruthLens is an AI fact-verification system that analyzes AI-generated responses, retrieves supporting evidence from trusted web sources, measures semantic similarity, and assigns a trust score with an explainable verdict.
+TruthLens is an open-source Python toolkit that helps developers **analyze Python code** for security, runtime, syntax, and AI-related issues while also **validating AI-generated responses** using retrieval-augmented verification, semantic similarity, and explainable trust scoring.
+
+Whether you're reviewing source code or verifying factual claims produced by AI systems, TruthLens provides detailed reports, confidence scores, and actionable insights.
 
 ---
 
 ## ✨ Features
 
-- 🔎 Detects factual claims from AI responses
-- 🏷️ Extracts named entities using spaCy
-- 🌐 Searches the web for supporting evidence using Tavily
-- 🧹 Cleans and filters noisy search results
-- 📊 Ranks evidence using multiple scoring signals
-- 🧠 Measures semantic similarity using Sentence Transformers
-- ✅ Generates explainable trust scores and verdicts
-- 💻 Interactive Streamlit dashboard
+### 🛡 Code Analysis
+
+- 🔎 Syntax analysis
+- ⚙ Runtime issue detection
+- 🔒 Security vulnerability detection
+- 🤖 AI hallucination detection in generated code
+- 📚 Rule-based Python API validation
+- 📄 HTML report generation
+- 📊 JSON report generation
+- 💻 Command Line Interface (CLI)
+
+### 🤖 AI Response Validation
+
+- 📝 Claim extraction
+- 🏷 Named Entity Recognition (spaCy)
+- 🌐 Live web evidence collection
+- 🧹 Evidence cleaning
+- 📊 Evidence ranking
+- 🧠 Semantic similarity verification
+- ✅ Explainable trust scores
+- 📑 Supporting evidence visualization
 
 ---
 
-## 🏗️ Architecture
+# 🏗 Architecture
+
+## Code Analysis Pipeline
 
 ```text
-User Input
-     │
-     ▼
+Python Source
+      │
+      ▼
 Response Parser
-     │
-     ▼
-Entity Extractor
-     │
-     ▼
-Technology Detector
-     │
-     ▼
-Query Builder
-     │
-     ▼
-Search Service (Tavily)
-     │
-     ▼
-Evidence Cleaner
-     │
-     ▼
-Evidence Ranker
-     │
-     ▼
-Semantic Verifier
-     │
-     ▼
+      │
+      ▼
+Analysis Pipeline
+      │
+      ├── Syntax Analyzer
+      ├── Runtime Analyzer
+      ├── Security Analyzer
+      └── Hallucination Analyzer
+      │
+      ▼
 Trust Engine
-     │
-     ▼
-Trust Report
+      │
+      ▼
+HTML Report
+JSON Report
 ```
 
 ---
 
-## 🚀 Tech Stack
+## AI Response Validation Pipeline
 
-| Category | Technology |
-|----------|------------|
-| Language | Python 3.12 |
-| UI | Streamlit |
-| NLP | spaCy |
-| Embeddings | Sentence Transformers |
-| Search | Tavily API |
-| Similarity | Cosine Similarity |
-| Environment | python-dotenv |
+```text
+AI Response
+      │
+      ▼
+Response Parser
+      │
+      ▼
+Entity Extraction
+      │
+      ▼
+Technology Detection
+      │
+      ▼
+Query Builder
+      │
+      ▼
+Search Service
+      │
+      ▼
+Evidence Cleaner
+      │
+      ▼
+Evidence Ranker
+      │
+      ▼
+Semantic Verifier
+      │
+      ▼
+Trust Engine
+      │
+      ▼
+Validation Report
+```
 
 ---
 
-## 📂 Project Structure
+# 🚀 Tech Stack
+
+| Category | Technologies |
+|------------|-----------------------------|
+| Language | Python |
+| NLP | spaCy |
+| Embeddings | Sentence Transformers |
+| Search | Tavily API |
+| Reports | HTML, JSON |
+| CLI | argparse |
+| UI | Streamlit (Validation Demo) |
+
+---
+
+# 📂 Project Structure
 
 ```text
 TruthLens/
 │
-├── app.py
-├── streamlit_app.py
+├── assets/
+├── data/
+├── docs/
+├── examples/
+├── reports/
 ├── src/
-│   ├── models/
-│   ├── modules/
+│   ├── analysis/
+│   ├── parser/
 │   ├── pipeline/
+│   ├── report/
+│   ├── rules/
 │   ├── services/
-│   └── utils/
+│   ├── verification/
+│   └── knowledge/
+│
+├── templates/
 ├── tests/
+├── truthlens/
+│   ├── __init__.py
+│   └── __main__.py
+│
+├── README.md
 ├── requirements.txt
-└── README.md
+└── .gitignore
 ```
 
 ---
 
-## ⚙️ Installation
+# ⚙ Installation
 
 ```bash
-git clone <repository-url>
+git clone https://github.com/yourusername/TruthLens.git
 
 cd TruthLens
+
+python -m venv venv
+
+# Windows
+venv\Scripts\activate
+
+# Linux/macOS
+source venv/bin/activate
 
 pip install -r requirements.txt
 ```
 
-Create a `.env` file:
+---
 
-```env
-TAVILY_API_KEY=YOUR_API_KEY
-```
+# 🚀 Quick Start
 
-Run the application:
+## Code Analysis
 
 ```bash
-python -m streamlit run streamlit_app.py
+python -m truthlens analyze examples/bad_code.py
+```
+
+Generates
+
+- Console Report
+- HTML Dashboard
+- JSON Report
+
+---
+
+## AI Response Validation
+
+```bash
+streamlit run streamlit_app.py
+```
+
+Paste an AI-generated response and receive
+
+- Trust Score
+- Supporting Evidence
+- Similarity Scores
+- Explainable Verdict
+
+---
+
+# 📊 Sample Output
+
+## Code Analysis
+
+```
+Trust Score
+
+68%
+
+Production Ready
+
+No
+
+Security Issues
+
+2
+
+Runtime Issues
+
+1
 ```
 
 ---
 
-## 📸 Screenshots
-
-### Home Page
-
-(Add Screenshot)
-
----
-
-### Validation Result
-
-(Add Screenshot)
-
----
-
-## 📈 Example
-
-### Input
+## AI Validation
 
 ```
+Claim
+
 Python was created by Guido van Rossum.
-React is maintained by Meta.
-The Earth has two moons.
-```
 
-### Output
+Verdict
 
-```
-Claim 1
-✔ SUPPORTED
-Trust Score: 91%
+SUPPORTED
 
-Claim 2
-✔ LIKELY SUPPORTED
-Trust Score: 87%
+Trust Score
 
-Claim 3
-✖ UNSUPPORTED
-Trust Score: 28%
+94%
+
+Supporting Evidence
+
+Python Official Documentation
+Wikipedia
+Britannica
 ```
 
 ---
 
-## 🔮 Future Work
+# 📸 Screenshots
 
-- LLM-powered claim verification
-- Multi-source agreement analysis
-- Contradiction detection
-- Browser extension
-- REST API
-- PDF report generation
-- Batch processing
+Coming soon
+
+- CLI
+- HTML Dashboard
+- Validation Dashboard
 
 ---
 
-## 👨‍💻 Author
+# 🛣 Roadmap
 
-Vrushav Piyushkumar Patel
+## Version 1.0
+
+- ✅ CLI
+- ✅ HTML Reports
+- ✅ JSON Reports
+- ✅ Runtime Analyzer
+- ✅ Security Analyzer
+- ✅ Hallucination Analyzer
+- ✅ AI Response Validation
+
+## Version 1.1
+
+- ⏳ Dark Mode Dashboard
+- ⏳ Batch Analysis
+- ⏳ PDF Reports
+
+## Version 2.0
+
+- ⏳ VS Code Extension
+- ⏳ GitHub Action
+- ⏳ REST API
+- ⏳ React Dashboard
+
+---
+
+# 🤝 Contributing
+
+Contributions are welcome.
+
+Feel free to fork the repository, open issues, or submit pull requests.
+
+---
+
+# 📄 License
+
+MIT License
+
+---
+
+# 👨‍💻 Author
+
+**Vrushav Piyushkumar Patel**
 
 Computer Engineering Student
+
+Building developer tools focused on AI trust, software quality, and secure code analysis.
