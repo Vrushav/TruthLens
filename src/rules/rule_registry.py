@@ -88,4 +88,16 @@ RULES = {
             "OWASP Deserialization Cheat Sheet",
         ],
     },
+    "SEC007": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.CRITICAL,
+        "title": "Unsafe yaml.load()",
+        "message": "yaml.load() may deserialize untrusted YAML and can lead to arbitrary code execution.",
+        "recommendation": ("Use yaml.safe_load() when parsing untrusted YAML content."),
+        "references": [
+            "PyYAML Documentation",
+            "OWASP Deserialization Cheat Sheet",
+        ],
+    },
 }

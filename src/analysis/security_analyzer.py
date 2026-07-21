@@ -74,6 +74,12 @@ class SecurityAnalyzer(Analyzer):
 
             issues.append(IssueFactory.create("SEC006", line=node.lineno))
 
+        # -------- SEC007 --------
+
+        elif node.func.id == "load" and imports.get("load") == "yaml":
+
+            issues.append(IssueFactory.create("SEC007", line=node.lineno))
+
         return issues
 
     # ---------------------------------------------------------
@@ -119,6 +125,16 @@ class SecurityAnalyzer(Analyzer):
 
             issues.append(IssueFactory.create("SEC006", line=node.lineno))
 
+        # yaml.load()
+
+        elif (
+            isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "yaml"
+            and node.func.attr == "load"
+        ):
+
+            issues.append(IssueFactory.create("SEC007", line=node.lineno))
+
         return issues
 
     # ---------------------------------------------------------
@@ -151,6 +167,11 @@ class SecurityAnalyzer(Analyzer):
                 and isinstance(node.value.value, str)
             ):
 
-                issues.append(IssueFactory.create("SEC004", line=node.lineno))
+                issues.append(
+                    IssueFactory.create(
+                        "SEC004",
+                        line=node.lineno,
+                    )
+                )
 
         return issues
