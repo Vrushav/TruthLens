@@ -7,6 +7,7 @@ from src.models.analysis.code_block import CodeBlock
 ATTRIBUTE_CALL_RULES = {
     ("pickle", "loads"): "SEC006",
     ("yaml", "load"): "SEC007",
+    ("hashlib", "md5"): "SEC008",
 }
 
 
@@ -86,6 +87,25 @@ class SecurityAnalyzer(Analyzer):
         elif node.func.id == "load" and imports.get("load") == "yaml":
 
             issues.append(IssueFactory.create("SEC007", line=node.lineno))
+        elif (
+            node.func.id == "load"
+            and imports.get("load") == "yaml"
+        ):
+
+            issues.append(IssueFactory.create("SEC007", line=node.lineno))
+
+        elif (
+            node.func.id == "md5"
+            and imports.get("md5") == "hashlib"
+        ):
+
+            issues.append(
+                IssueFactory.create(
+                    "SEC008",
+                   line=node.lineno,
+        )
+    )
+
 
         return issues
 

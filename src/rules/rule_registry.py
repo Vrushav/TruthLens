@@ -100,4 +100,17 @@ RULES = {
             "OWASP Deserialization Cheat Sheet",
         ],
     },
+    "SEC008": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Weak MD5 Hash Algorithm",
+        "message": "MD5 is cryptographically broken and should not be used for security-sensitive purposes.",
+        "recommendation": "Use SHA-256, SHA-3, or another modern cryptographic hash function instead.",
+        "references": [
+            "Python hashlib documentation",
+            "NIST SP 800-131A",
+            "OWASP Cryptographic Storage Cheat Sheet",
+        ],
+    },
 }
