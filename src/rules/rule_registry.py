@@ -4,7 +4,6 @@ from src.models.enums.severity import Severity
 
 
 RULES = {
-
     "RUN001": {
         "analyzer": AnalyzerType.RUNTIME,
         "category": Category.RUNTIME,
@@ -12,11 +11,8 @@ RULES = {
         "title": "Division by Zero",
         "message": "Division by zero will raise ZeroDivisionError.",
         "recommendation": "Ensure the denominator is not zero before dividing.",
-        "references": [
-            "Python ZeroDivisionError"
-        ]
+        "references": ["Python ZeroDivisionError"],
     },
-
     "SYN001": {
         "analyzer": AnalyzerType.SYNTAX,
         "category": Category.SYNTAX,
@@ -24,11 +20,8 @@ RULES = {
         "title": "Syntax Error",
         "message": "Python syntax is invalid.",
         "recommendation": "Fix the syntax before executing the code.",
-        "references": [
-            "Python Language Reference"
-        ]
+        "references": ["Python Language Reference"],
     },
-
     "API001": {
         "analyzer": AnalyzerType.HALLUCINATION,
         "category": Category.HALLUCINATION,
@@ -36,11 +29,8 @@ RULES = {
         "title": "Hallucinated API",
         "message": "The referenced API does not exist.",
         "recommendation": "Verify the API against the official documentation.",
-        "references": [
-            "Official Python Documentation"
-         ]
+        "references": ["Official Python Documentation"],
     },
-
     "SEC001": {
         "analyzer": AnalyzerType.SECURITY,
         "category": Category.SECURITY,
@@ -48,9 +38,8 @@ RULES = {
         "title": "Use of eval()",
         "message": "eval() executes arbitrary code and can lead to code injection.",
         "recommendation": "Avoid eval(). Use safer parsing methods such as ast.literal_eval() when appropriate.",
-        "references": ["Python Security Guidelines"]
+        "references": ["Python Security Guidelines"],
     },
-
     "SEC002": {
         "analyzer": AnalyzerType.SECURITY,
         "category": Category.SECURITY,
@@ -58,9 +47,8 @@ RULES = {
         "title": "Use of exec()",
         "message": "exec() executes arbitrary Python code.",
         "recommendation": "Avoid exec() unless absolutely necessary.",
-        "references": ["Python Security Guidelines"]
+        "references": ["Python Security Guidelines"],
     },
-
     "SEC003": {
         "analyzer": AnalyzerType.SECURITY,
         "category": Category.SECURITY,
@@ -68,9 +56,8 @@ RULES = {
         "title": "shell=True detected",
         "message": "Using shell=True may lead to command injection.",
         "recommendation": "Use subprocess without shell=True whenever possible.",
-        "references": ["Python subprocess documentation"]
+        "references": ["Python subprocess documentation"],
     },
-
     "SEC004": {
         "analyzer": AnalyzerType.SECURITY,
         "category": Category.SECURITY,
@@ -78,21 +65,27 @@ RULES = {
         "title": "Hardcoded Credential",
         "message": "A hardcoded credential was detected in the source code.",
         "recommendation": "Store credentials in environment variables or a secure secret manager instead of embedding them in code.",
-        "references": [
-            "OWASP Secrets Management Cheat Sheet"
-        ]
+        "references": ["OWASP Secrets Management Cheat Sheet"],
     },
-
     "SEC005": {
-    "analyzer": AnalyzerType.SECURITY,
-    "category": Category.SECURITY,
-    "severity": Severity.HIGH,
-    "title": "Use of os.system()",
-    "message": "os.system() executes shell commands and may lead to command injection.",
-    "recommendation": "Prefer subprocess.run() without shell=True or safer APIs.",
-    "references": [
-        "Python os module documentation"
-    ]
-},
-
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Use of os.system()",
+        "message": "os.system() executes shell commands and may lead to command injection.",
+        "recommendation": "Prefer subprocess.run() without shell=True or safer APIs.",
+        "references": ["Python os module documentation"],
+    },
+    "SEC006": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.CRITICAL,
+        "title": "Unsafe pickle.loads()",
+        "message": "pickle.loads() can execute arbitrary code when deserializing untrusted data.",
+        "recommendation": "Avoid loading untrusted pickle data. Prefer safer serialization formats like JSON whenever possible.",
+        "references": [
+            "Python pickle documentation",
+            "OWASP Deserialization Cheat Sheet",
+        ],
+    },
 }

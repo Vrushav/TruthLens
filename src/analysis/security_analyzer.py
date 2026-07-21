@@ -19,33 +19,57 @@ class SecurityAnalyzer(Analyzer):
         except SyntaxError:
             return issues
 
+        # -----------------------------------------
+        # Track imported names
+        # Example:
+        # from pickle import loads
+        # => imports["loads"] = "pickle"
+        # -----------------------------------------
+
+        imports = {}
+
         for node in ast.walk(tree):
 
-            # Detect eval() / exec()
+            if isinstance(node, ast.ImportFrom):
+
+                if node.module:
+
+                    for alias in node.names:
+                        imports[alias.asname or alias.name] = node.module
+
+        # -----------------------------------------
+        # Analyze AST
+        # -----------------------------------------
+
+        for node in ast.walk(tree):
+
             if isinstance(node, ast.Call):
+
+                # -------------------------
+                # Name-based calls
+                # -------------------------
 
                 if isinstance(node.func, ast.Name):
 
                     if node.func.id == "eval":
-                        issues.append(
-                            IssueFactory.create(
-                                "SEC001",
-                                line=node.lineno
-                            )
-                        )
+
+                        issues.append(IssueFactory.create("SEC001", line=node.lineno))
 
                     elif node.func.id == "exec":
-                        issues.append(
-                            IssueFactory.create(
-                                "SEC002",
-                                line=node.lineno
-                            )
-                        )
 
-            # Detect subprocess.run(..., shell=True)
-            if isinstance(node, ast.Call):
+                        issues.append(IssueFactory.create("SEC002", line=node.lineno))
 
-                if isinstance(node.func, ast.Attribute):
+                    elif node.func.id == "loads" and imports.get("loads") == "pickle":
+
+                        issues.append(IssueFactory.create("SEC006", line=node.lineno))
+
+                # -------------------------
+                # Attribute-based calls
+                # -------------------------
+
+                elif isinstance(node.func, ast.Attribute):
+
+                    # subprocess.run(..., shell=True)
 
                     if node.func.attr == "run":
 
@@ -58,32 +82,34 @@ class SecurityAnalyzer(Analyzer):
                             ):
 
                                 issues.append(
-                                    IssueFactory.create(
-                                        "SEC003",
-                                        line=node.lineno
-                                    )
+                                    IssueFactory.create("SEC003", line=node.lineno)
                                 )
 
-            # Detect os.system()
-            if isinstance(node, ast.Call):
+                    # os.system()
 
-                if isinstance(node.func, ast.Attribute):
-
-                    if (
+                    elif (
                         isinstance(node.func.value, ast.Name)
                         and node.func.value.id == "os"
                         and node.func.attr == "system"
                     ):
 
-                        issues.append(
-                            IssueFactory.create(
-                                "SEC005",
-                                line=node.lineno
-                            )
-                        )
+                        issues.append(IssueFactory.create("SEC005", line=node.lineno))
 
-            # Detect hardcoded credentials
-            if isinstance(node, ast.Assign):
+                    # pickle.loads()
+
+                    elif (
+                        isinstance(node.func.value, ast.Name)
+                        and node.func.value.id == "pickle"
+                        and node.func.attr == "loads"
+                    ):
+
+                        issues.append(IssueFactory.create("SEC006", line=node.lineno))
+
+            # -------------------------
+            # Hardcoded credentials
+            # -------------------------
+
+            elif isinstance(node, ast.Assign):
 
                 for target in node.targets:
 
@@ -111,10 +137,7 @@ class SecurityAnalyzer(Analyzer):
                         ):
 
                             issues.append(
-                                IssueFactory.create(
-                                    "SEC004",
-                                    line=node.lineno
-                                )
+                                IssueFactory.create("SEC004", line=node.lineno)
                             )
 
         return issues

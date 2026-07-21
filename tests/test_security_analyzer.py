@@ -92,3 +92,62 @@ os.system("ls")
 
     assert len(issues) == 1
     assert issues[0].id == "SEC005"
+
+
+def test_pickle_loads_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import pickle
+pickle.loads(data)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC006"
+
+
+def test_pickle_imported_loads_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+from pickle import loads
+loads(data)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC006"
+
+
+def test_json_loads_not_detected():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import json
+json.loads("{}")
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 0
