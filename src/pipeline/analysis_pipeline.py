@@ -1,3 +1,4 @@
+from src.models import report
 from src.parser.response_parser import ResponseParser
 from src.analysis.analysis_engine import AnalysisEngine
 from src.analysis.syntax_analyzer import SyntaxAnalyzer
@@ -56,8 +57,8 @@ class AnalysisPipeline:
         report = self.trust_engine.calculate(issues)
 
         # Step 4: Generate all report formats
-        self.html_report_generator.generate(report)
+        html_path = self.html_report_generator.generate(report)
         self.json_report_generator.generate(report)
 
-        # Step 5: Return console report
-        return self.report_generator.generate(report)
+        # Step 5: Return console report and HTML report path
+        return self.report_generator.generate(report), html_path

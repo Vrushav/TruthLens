@@ -1,5 +1,6 @@
 import argparse
 import sys
+import webbrowser
 from pathlib import Path
 
 from truthlens import __version__
@@ -45,7 +46,7 @@ def analyze_command(file_path: str) -> int:
 
     pipeline = AnalysisPipeline()
 
-    report = pipeline.analyze(response)
+    report, html_path = pipeline.analyze(response)
 
     print("✓ Analysis completed")
     print("✓ HTML report generated")
@@ -54,7 +55,15 @@ def analyze_command(file_path: str) -> int:
     print()
     print(report)
 
-    return 0
+    print()
+    print(f"📄 HTML Report : {html_path}")
+    print("🌐 Opening report in your default browser...")
+
+    try:
+        webbrowser.open(html_path.resolve().as_uri())
+    except Exception as exc:
+        print(f"⚠ Unable to open browser: {exc}")
+        return 0
 
 
 def main() -> None:
