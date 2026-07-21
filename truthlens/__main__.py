@@ -1,45 +1,82 @@
+import argparse
 import sys
 from pathlib import Path
 
+from truthlens import __version__
 from src.pipeline.analysis_pipeline import AnalysisPipeline
 
 
-def main():
-    if len(sys.argv) != 2:
-        print("Usage:")
-        print("    python -m truthlens <python_file>")
-        sys.exit(1)
+def analyze_command(file_path: str) -> int:
+    """
+    Analyze a Python source file using TruthLens.
+    """
 
-    file_path = Path(sys.argv[1])
+    path = Path(file_path)
 
-    if not file_path.exists():
-        print(f"Error: File '{file_path}' not found.")
-        sys.exit(1)
+    if not path.exists():
+        print(f"❌ Error: File '{path}' not found.")
+        return 1
 
-    if file_path.suffix != ".py":
-        print("Error: Only Python (.py) files are supported.")
-        sys.exit(1)
+    if path.suffix != ".py":
+        print("❌ Error: Only Python (.py) files are supported.")
+        return 1
 
     try:
-        code = file_path.read_text(encoding="utf-8")
+        code = path.read_text(encoding="utf-8")
     except Exception as exc:
-        print(f"Unable to read file: {exc}")
-        sys.exit(1)
+        print(f"❌ Unable to read file: {exc}")
+        return 1
 
     response = f"""```python
 {code}
 ```"""
 
     print("=" * 60)
-    print("TruthLens AI Code Trust Validator")
+    print(f"TruthLens AI Code Trust Validator v{__version__}")
     print("=" * 60)
-    print(f"Analyzing: {file_path}")
+    print()
+
+    print(f"📄 Reading: {path}")
+    print("✓ File loaded successfully")
+
+    print()
+    print("🔍 Running analysis...")
     print()
 
     pipeline = AnalysisPipeline()
+
     report = pipeline.analyze(response)
 
+    print("✓ Analysis completed")
+    print("✓ HTML report generated")
+    print("✓ JSON report generated")
+
+    print()
     print(report)
+
+    return 0
+
+
+def main() -> None:
+
+    parser = argparse.ArgumentParser(
+        prog="truthlens", description="TruthLens AI Code Trust Validator"
+    )
+
+    subparsers = parser.add_subparsers(dest="command")
+
+    analyze_parser = subparsers.add_parser(
+        "analyze", help="Analyze a Python source file"
+    )
+
+    analyze_parser.add_argument("file", help="Path to a Python (.py) file")
+
+    args = parser.parse_args()
+
+    if args.command == "analyze":
+        sys.exit(analyze_command(args.file))
+
+    parser.print_help()
 
 
 if __name__ == "__main__":

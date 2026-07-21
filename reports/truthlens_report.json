@@ -1,0 +1,53 @@
+{
+    "tool": "TruthLens",
+    "version": "1.0.0",
+    "trust_score": 55,
+    "production_ready": false,
+    "total_issues": 3,
+    "issues": [
+        {
+            "id": "SEC004",
+            "analyzer": "SECURITY",
+            "category": "SECURITY",
+            "severity": "HIGH",
+            "title": "Hardcoded Credential",
+            "message": "A hardcoded credential was detected in the source code.",
+            "recommendation": "Store credentials in environment variables or a secure secret manager instead of embedding them in code.",
+            "line": 4,
+            "confidence": 1.0,
+            "references": [
+                "OWASP Secrets Management Cheat Sheet"
+            ]
+        },
+        {
+            "id": "SEC005",
+            "analyzer": "SECURITY",
+            "category": "SECURITY",
+            "severity": "HIGH",
+            "title": "Use of os.system()",
+            "message": "os.system() executes shell commands and may lead to command injection.",
+            "recommendation": "Prefer subprocess.run() without shell=True or safer APIs.",
+            "line": 6,
+            "confidence": 1.0,
+            "references": [
+                "Python os module documentation"
+            ]
+        },
+        {
+            "id": "SEC008",
+            "analyzer": "SECURITY",
+            "category": "SECURITY",
+            "severity": "HIGH",
+            "title": "Weak MD5 Hash Algorithm",
+            "message": "MD5 is cryptographically broken and should not be used for security-sensitive purposes.",
+            "recommendation": "Use SHA-256, SHA-3, or another modern cryptographic hash function instead.",
+            "line": 8,
+            "confidence": 1.0,
+            "references": [
+                "Python hashlib documentation",
+                "NIST SP 800-131A",
+                "OWASP Cryptographic Storage Cheat Sheet"
+            ]
+        }
+    ]
+}
