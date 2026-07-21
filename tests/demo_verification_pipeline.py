@@ -6,30 +6,42 @@ from src.verification.evidence_ranker import EvidenceRanker
 from src.verification.semantic_verifier import SemanticVerifier
 from src.verification.trust_engine import TrustEngine
 
-claim = Claim(
-    text="Python was created by Guido van Rossum."
-)
 
-claim.entities = [
-    Entity("Python", "TECHNOLOGY"),
-    Entity("Guido van Rossum", "PERSON")
-]
+def main():
 
-collector = EvidenceCollector()
-ranker = EvidenceRanker()
-verifier = SemanticVerifier()
-engine = TrustEngine()
+    claim = Claim(text="Python was created by Guido van Rossum.")
 
-claim = collector.collect(claim)
-claim = ranker.rank(claim)
-claim = verifier.verify(claim)
-claim = engine.evaluate(claim)
+    claim.entities = [
+        Entity("Python", "TECHNOLOGY"),
+        Entity("Guido van Rossum", "PERSON"),
+    ]
 
-print("\nClaim:")
-print(claim.text)
+    collector = EvidenceCollector()
+    ranker = EvidenceRanker()
+    verifier = SemanticVerifier()
+    engine = TrustEngine()
 
-print("\nTrust Result")
-print("-" * 50)
-print(f"Score      : {claim.trust_result.trust_score}")
-print(f"Verdict    : {claim.trust_result.verdict}")
-print(f"Explanation: {claim.trust_result.explanation}")
+    claim = collector.collect(claim)
+    claim = ranker.rank(claim)
+    claim = verifier.verify(claim)
+    claim = engine.evaluate(claim)
+
+    print("\nClaim:")
+    print(claim.text)
+
+    print("\nTrust Result")
+    print("-" * 50)
+
+    if claim.trust_result is not None:
+
+        print(f"Score      : {claim.trust_result.trust_score}")
+        print(f"Verdict    : {claim.trust_result.verdict}")
+        print(f"Explanation: {claim.trust_result.explanation}")
+
+    else:
+
+        print("No trust result was generated.")
+
+
+if __name__ == "__main__":
+    main()

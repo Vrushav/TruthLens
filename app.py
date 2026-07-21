@@ -1,29 +1,49 @@
 from src.pipeline.validation_pipeline import ValidationPipeline
 
-pipeline = ValidationPipeline()
 
-print("Enter an AI response (press Enter twice to finish):")
+def main():
 
-lines = []
+    pipeline = ValidationPipeline()
 
-while True:
-    line = input()
-    if line == "":
-        break
-    lines.append(line)
+    print("Enter an AI response (press Enter twice to finish):")
 
-response = "\n".join(lines)
+    lines = []
 
-claims = pipeline.validate(response)
+    while True:
+        line = input()
 
-for claim in claims:
-    print("\n" + "=" * 80)
-    print(f"Claim: {claim.text}")
-    print(f"Verdict: {claim.trust_result.verdict}")
-    print(f"Trust Score: {claim.trust_result.trust_score:.2f}%")
+        if line == "":
+            break
 
-    print("\nTop Evidence:")
-    for evidence in claim.evidence:
-        print(f"- {evidence.title}")
-        print(f"  Source: {evidence.source}")
-        print(f"  Similarity: {evidence.similarity_score:.2f}")
+        lines.append(line)
+
+    response = "\n".join(lines)
+
+    claims = pipeline.validate(response)
+
+    for claim in claims:
+
+        print("\n" + "=" * 80)
+        print(f"Claim: {claim.text}")
+
+        if claim.trust_result is not None:
+
+            print(f"Verdict: {claim.trust_result.verdict}")
+            print(f"Trust Score: {claim.trust_result.trust_score:.2f}%")
+
+        else:
+
+            print("Verdict: Not Available")
+            print("Trust Score: N/A")
+
+        print("\nTop Evidence:")
+
+        for evidence in claim.evidence:
+
+            print(f"- {evidence.title}")
+            print(f"  Source: {evidence.source}")
+            print(f"  Similarity: {evidence.similarity_score:.2f}")
+
+
+if __name__ == "__main__":
+    main()

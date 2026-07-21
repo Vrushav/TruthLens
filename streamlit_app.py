@@ -1,13 +1,11 @@
 import streamlit as st
+
 from src.pipeline.validation_pipeline import ValidationPipeline
 from src.utils.text_cleaner import clean_snippet
+
 # ---------------- Page Configuration ---------------- #
 
-st.set_page_config(
-    page_title="TruthLens",
-    page_icon="🔍",
-    layout="wide"
-)
+st.set_page_config(page_title="TruthLens", page_icon="🔍", layout="wide")
 
 pipeline = ValidationPipeline()
 
@@ -15,8 +13,7 @@ pipeline = ValidationPipeline()
 
 st.title("🔍 TruthLens")
 
-st.markdown(
-    """
+st.markdown("""
 ### AI Hallucination & Trust Validator
 
 Validate AI-generated responses using:
@@ -25,8 +22,7 @@ Validate AI-generated responses using:
 - 🧠 Semantic Similarity
 - 📊 Trust Scoring
 - 📄 Explainable Evidence
-"""
-)
+""")
 
 st.divider()
 
@@ -40,13 +36,10 @@ Python was created by Guido van Rossum.
 React is maintained by Meta.
 The Earth has two moons.
 """,
-    height=220
+    height=220,
 )
 
-validate = st.button(
-    "🚀 Validate Response",
-    use_container_width=True
-)
+validate = st.button("🚀 Validate Response", use_container_width=True)
 
 # ---------------- Validation ---------------- #
 
@@ -72,6 +65,14 @@ if validate:
 
         st.write(claim.text)
 
+        # -------------------------------------------------
+        # Safely handle optional trust_result
+        # -------------------------------------------------
+
+        if claim.trust_result is None:
+            st.error("No trust analysis available.")
+            continue
+
         verdict = claim.trust_result.verdict
 
         if verdict == "SUPPORTED":
@@ -90,10 +91,7 @@ if validate:
 
         st.progress(score / 100)
 
-        st.metric(
-            "Trust Score",
-            f"{score:.2f}%"
-        )
+        st.metric("Trust Score", f"{score:.2f}%")
 
         st.write("### 📄 Supporting Evidence")
 
@@ -103,16 +101,11 @@ if validate:
 
                 st.write(f"**Source:** {evidence.source}")
 
-                st.write(
-                    f"**Semantic Match:** {evidence.similarity_score:.2%}"
-                )
+                st.write(f"**Semantic Match:** {evidence.similarity_score:.2%}")
 
                 st.markdown(
                     f"<div style='font-size:15px'>{evidence.snippet}</div>",
-                    unsafe_allow_html=True
+                    unsafe_allow_html=True,
                 )
 
-                st.link_button(
-                    "🔗 Open Source",
-                    evidence.url
-                )
+                st.link_button("🔗 Open Source", evidence.url)

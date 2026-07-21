@@ -21,13 +21,12 @@ class SecurityAnalyzer(Analyzer):
 
         for node in ast.walk(tree):
 
-            # Detect eval()
+            # Detect eval() / exec()
             if isinstance(node, ast.Call):
 
                 if isinstance(node.func, ast.Name):
 
                     if node.func.id == "eval":
-
                         issues.append(
                             IssueFactory.create(
                                 "SEC001",
@@ -36,7 +35,6 @@ class SecurityAnalyzer(Analyzer):
                         )
 
                     elif node.func.id == "exec":
-
                         issues.append(
                             IssueFactory.create(
                                 "SEC002",
@@ -44,7 +42,7 @@ class SecurityAnalyzer(Analyzer):
                             )
                         )
 
-            # Detect subprocess(..., shell=True)
+            # Detect subprocess.run(..., shell=True)
             if isinstance(node, ast.Call):
 
                 if isinstance(node.func, ast.Attribute):
@@ -53,19 +51,36 @@ class SecurityAnalyzer(Analyzer):
 
                         for keyword in node.keywords:
 
-                            if keyword.arg == "shell":
+                            if (
+                                keyword.arg == "shell"
+                                and isinstance(keyword.value, ast.Constant)
+                                and keyword.value.value is True
+                            ):
 
-                                if (
-                                    isinstance(keyword.value, ast.Constant)
-                                    and keyword.value.value is True
-                                ):
-
-                                    issues.append(
-                                        IssueFactory.create(
-                                            "SEC003",
-                                            line=node.lineno
-                                        )
+                                issues.append(
+                                    IssueFactory.create(
+                                        "SEC003",
+                                        line=node.lineno
                                     )
+                                )
+
+            # Detect os.system()
+            if isinstance(node, ast.Call):
+
+                if isinstance(node.func, ast.Attribute):
+
+                    if (
+                        isinstance(node.func.value, ast.Name)
+                        and node.func.value.id == "os"
+                        and node.func.attr == "system"
+                    ):
+
+                        issues.append(
+                            IssueFactory.create(
+                                "SEC005",
+                                line=node.lineno
+                            )
+                        )
 
             # Detect hardcoded credentials
             if isinstance(node, ast.Assign):
@@ -77,28 +92,29 @@ class SecurityAnalyzer(Analyzer):
                         variable_name = target.id.lower()
 
                         suspicious_names = {
-                          "password",
-                          "passwd",
-                          "pwd",
-                          "secret",
-                          "token",
-                          "api_key",
-                          "apikey",
-                          "access_key",
-                          "auth_token",
-                          "jwt_secret",
+                            "password",
+                            "passwd",
+                            "pwd",
+                            "secret",
+                            "token",
+                            "api_key",
+                            "apikey",
+                            "access_key",
+                            "auth_token",
+                            "jwt_secret",
                         }
 
-                        if variable_name in suspicious_names:
+                        if (
+                            variable_name in suspicious_names
+                            and isinstance(node.value, ast.Constant)
+                            and isinstance(node.value.value, str)
+                        ):
 
-                            if isinstance(node.value, ast.Constant):
-
-                                if isinstance(node.value.value, str):
-
-                                    issues.append(
-                                        IssueFactory.create(
-                                            "SEC004",
-                                          line=node.lineno
+                            issues.append(
+                                IssueFactory.create(
+                                    "SEC004",
+                                    line=node.lineno
+                                )
                             )
-                        )
+
         return issues

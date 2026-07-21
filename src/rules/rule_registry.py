@@ -81,6 +81,18 @@ RULES = {
         "references": [
             "OWASP Secrets Management Cheat Sheet"
         ]
-    }
+    },
+
+    "SEC005": {
+    "analyzer": AnalyzerType.SECURITY,
+    "category": Category.SECURITY,
+    "severity": Severity.HIGH,
+    "title": "Use of os.system()",
+    "message": "os.system() executes shell commands and may lead to command injection.",
+    "recommendation": "Prefer subprocess.run() without shell=True or safer APIs.",
+    "references": [
+        "Python os module documentation"
+    ]
+},
 
 }

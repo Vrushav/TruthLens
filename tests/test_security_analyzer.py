@@ -6,12 +6,7 @@ from src.models.enums.category import Category
 def test_eval_detection():
     analyzer = SecurityAnalyzer()
 
-    block = CodeBlock(
-        language="python",
-        code='eval("2+2")',
-        start_line=1,
-        end_line=1
-    )
+    block = CodeBlock(language="python", code='eval("2+2")', start_line=1, end_line=1)
 
     issues = analyzer.analyze(block)
 
@@ -23,10 +18,7 @@ def test_exec_detection():
     analyzer = SecurityAnalyzer()
 
     block = CodeBlock(
-        language="python",
-        code='exec("print(1)")',
-        start_line=1,
-        end_line=1
+        language="python", code='exec("print(1)")', start_line=1, end_line=1
     )
 
     issues = analyzer.analyze(block)
@@ -44,7 +36,7 @@ import subprocess
 subprocess.run("ls", shell=True)
 """,
         start_line=1,
-        end_line=2
+        end_line=2,
     )
 
     issues = analyzer.analyze(block)
@@ -62,9 +54,41 @@ import subprocess
 subprocess.run(["ls"])
 """,
         start_line=1,
-        end_line=2
+        end_line=2,
     )
 
     issues = analyzer.analyze(block)
 
     assert len(issues) == 0
+
+
+def test_hardcoded_credentials_detection():
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python", code='password = "admin123"', start_line=1, end_line=1
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC004"
+
+
+def test_os_system_detection():
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import os
+os.system("ls")
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC005"

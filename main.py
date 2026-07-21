@@ -5,9 +5,9 @@ def main():
 
     sample_response = '''
 ```python
-password = "admin123"
+import os
 
-print(password)
+os.system("dir")
 ```
 '''
 
