@@ -429,3 +429,158 @@ hashlib.sha512(data)
 
     assert len(issues) == 0
 
+def test_password_random_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+password = random.randint(100000, 999999)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC010"
+
+
+def test_token_random_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+token = random.random()
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC010"
+
+
+def test_secret_random_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+secret = random.choice(chars)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC010"
+
+
+def test_otp_random_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+otp = random.randrange(100000, 999999)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC010"
+
+
+def test_random_alias_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random as r
+password = r.randint(100000, 999999)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC010"
+
+
+def test_dice_random_not_detected():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+dice = random.randint(1, 6)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 0
+
+
+def test_score_random_not_detected():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+score = random.randint(0, 100)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 0
+
+
+def test_enemy_random_not_detected():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import random
+enemy = random.choice(monsters)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 0

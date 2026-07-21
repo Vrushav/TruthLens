@@ -126,4 +126,24 @@ RULES = {
             "OWASP Cryptographic Storage Cheat Sheet",
         ],
     },
+    "SEC010": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Weak Random Generator",
+        "message": (
+            "The random module is not cryptographically secure and "
+            "should not be used for passwords, tokens, OTPs, or other "
+            "security-sensitive values."
+        ),
+        "recommendation": (
+            "Use the secrets module instead, such as "
+            "secrets.token_hex(), secrets.randbelow(), or secrets.choice()."
+        ),
+        "references": [
+            "Python secrets documentation",
+            "Python random documentation",
+            "PEP 506",
+        ],
+    },
 }

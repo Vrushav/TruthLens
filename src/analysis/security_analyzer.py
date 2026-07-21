@@ -18,6 +18,7 @@ NAME_CALL_RULES = {
     ("hashlib", "sha1"): "SEC009",
 }
 
+
 class SecurityAnalyzer(Analyzer):
 
     def analyze(self, block: CodeBlock):
@@ -44,7 +45,7 @@ class SecurityAnalyzer(Analyzer):
 
             elif isinstance(node, ast.Assign):
 
-                issues.extend(self._check_assignments(node))
+                issues.extend(self._check_assignments(node, imports))
 
         return issues
 
@@ -84,7 +85,7 @@ class SecurityAnalyzer(Analyzer):
             issues.append(
                 IssueFactory.create(
                     "SEC001",
-                   line=node.lineno,
+                    line=node.lineno,
                 )
             )
 
@@ -95,7 +96,7 @@ class SecurityAnalyzer(Analyzer):
             issues.append(
                 IssueFactory.create(
                     "SEC002",
-                   line=node.lineno,
+                    line=node.lineno,
                 )
             )
 
@@ -113,7 +114,7 @@ class SecurityAnalyzer(Analyzer):
             issues.append(
                 IssueFactory.create(
                     rule,
-                  line=node.lineno,
+                    line=node.lineno,
                 )
             )
 
@@ -179,7 +180,7 @@ class SecurityAnalyzer(Analyzer):
 
     # ---------------------------------------------------------
 
-    def _check_assignments(self, node):
+    def _check_assignments(self, node, imports):
 
         issues = []
 
@@ -189,6 +190,7 @@ class SecurityAnalyzer(Analyzer):
             "pwd",
             "secret",
             "token",
+            "otp",
             "api_key",
             "apikey",
             "access_key",
@@ -196,13 +198,26 @@ class SecurityAnalyzer(Analyzer):
             "jwt_secret",
         }
 
+        weak_random_functions = {
+            "randint",
+            "random",
+            "randrange",
+            "choice",
+        }
+
         for target in node.targets:
 
             if not isinstance(target, ast.Name):
                 continue
 
+            target_name = target.id.lower()
+
+            # -------------------------------------------------
+            # SEC004 - Hardcoded credentials
+            # -------------------------------------------------
+
             if (
-                target.id.lower() in suspicious_names
+                target_name in suspicious_names
                 and isinstance(node.value, ast.Constant)
                 and isinstance(node.value.value, str)
             ):
@@ -210,6 +225,35 @@ class SecurityAnalyzer(Analyzer):
                 issues.append(
                     IssueFactory.create(
                         "SEC004",
+                        line=node.lineno,
+                    )
+                )
+
+            # -------------------------------------------------
+            # SEC010 - Weak random for security-sensitive values
+            # -------------------------------------------------
+
+            if target_name not in suspicious_names or not isinstance(
+                node.value, ast.Call
+            ):
+                continue
+
+            if not isinstance(node.value.func, ast.Attribute):
+                continue
+
+            if not isinstance(node.value.func.value, ast.Name):
+                continue
+
+            module = imports.get(
+                node.value.func.value.id,
+                node.value.func.value.id,
+            )
+
+            if module == "random" and node.value.func.attr in weak_random_functions:
+
+                issues.append(
+                    IssueFactory.create(
+                        "SEC010",
                         line=node.lineno,
                     )
                 )
