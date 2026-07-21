@@ -4,6 +4,11 @@ from src.analysis.analyzer import Analyzer
 from src.analysis.issue_factory import IssueFactory
 from src.models.analysis.code_block import CodeBlock
 
+ATTRIBUTE_CALL_RULES = {
+    ("pickle", "loads"): "SEC006",
+    ("yaml", "load"): "SEC007",
+}
+
 
 class SecurityAnalyzer(Analyzer):
 
@@ -27,7 +32,7 @@ class SecurityAnalyzer(Analyzer):
 
                 issues.extend(self._check_name_calls(node, imports))
 
-                issues.extend(self._check_attribute_calls(node))
+                issues.extend(self._check_attribute_calls(node, imports))
 
             elif isinstance(node, ast.Assign):
 
@@ -43,12 +48,16 @@ class SecurityAnalyzer(Analyzer):
 
         for node in ast.walk(tree):
 
-            if isinstance(node, ast.ImportFrom):
+            if isinstance(node, ast.Import):
+
+                for alias in node.names:
+                    imports[alias.asname or alias.name] = alias.name
+
+            elif isinstance(node, ast.ImportFrom):
 
                 if node.module:
 
                     for alias in node.names:
-
                         imports[alias.asname or alias.name] = node.module
 
         return imports
@@ -74,8 +83,6 @@ class SecurityAnalyzer(Analyzer):
 
             issues.append(IssueFactory.create("SEC006", line=node.lineno))
 
-        # -------- SEC007 --------
-
         elif node.func.id == "load" and imports.get("load") == "yaml":
 
             issues.append(IssueFactory.create("SEC007", line=node.lineno))
@@ -84,7 +91,7 @@ class SecurityAnalyzer(Analyzer):
 
     # ---------------------------------------------------------
 
-    def _check_attribute_calls(self, node):
+    def _check_attribute_calls(self, node, imports):
 
         issues = []
 
@@ -103,37 +110,40 @@ class SecurityAnalyzer(Analyzer):
                     and keyword.value.value is True
                 ):
 
-                    issues.append(IssueFactory.create("SEC003", line=node.lineno))
+                    issues.append(
+                        IssueFactory.create(
+                            "SEC003",
+                            line=node.lineno,
+                        )
+                    )
 
-        # os.system()
+        if not isinstance(node.func.value, ast.Name):
+            return issues
 
-        elif (
-            isinstance(node.func.value, ast.Name)
-            and node.func.value.id == "os"
-            and node.func.attr == "system"
-        ):
+        module = imports.get(
+            node.func.value.id,
+            node.func.value.id,
+        )
 
-            issues.append(IssueFactory.create("SEC005", line=node.lineno))
+        rule = ATTRIBUTE_CALL_RULES.get((module, node.func.attr))
 
-        # pickle.loads()
+        if rule:
 
-        elif (
-            isinstance(node.func.value, ast.Name)
-            and node.func.value.id == "pickle"
-            and node.func.attr == "loads"
-        ):
+            issues.append(
+                IssueFactory.create(
+                    rule,
+                    line=node.lineno,
+                )
+            )
 
-            issues.append(IssueFactory.create("SEC006", line=node.lineno))
+        elif module == "os" and node.func.attr == "system":
 
-        # yaml.load()
-
-        elif (
-            isinstance(node.func.value, ast.Name)
-            and node.func.value.id == "yaml"
-            and node.func.attr == "load"
-        ):
-
-            issues.append(IssueFactory.create("SEC007", line=node.lineno))
+            issues.append(
+                IssueFactory.create(
+                    "SEC005",
+                    line=node.lineno,
+                )
+            )
 
         return issues
 
