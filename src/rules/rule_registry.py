@@ -113,4 +113,17 @@ RULES = {
             "OWASP Cryptographic Storage Cheat Sheet",
         ],
     },
+    "SEC009": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Weak SHA-1 Hash Algorithm",
+        "message": "SHA-1 is considered cryptographically weak and should not be used for security-sensitive purposes.",
+        "recommendation": "Use SHA-256, SHA-3, or another modern cryptographic hash function instead.",
+        "references": [
+            "Python hashlib documentation",
+            "NIST SP 800-131A",
+            "OWASP Cryptographic Storage Cheat Sheet",
+        ],
+    },
 }

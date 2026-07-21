@@ -8,12 +8,14 @@ ATTRIBUTE_CALL_RULES = {
     ("pickle", "loads"): "SEC006",
     ("yaml", "load"): "SEC007",
     ("hashlib", "md5"): "SEC008",
+    ("hashlib", "sha1"): "SEC009",
 }
 
 NAME_CALL_RULES = {
     ("pickle", "loads"): "SEC006",
     ("yaml", "load"): "SEC007",
     ("hashlib", "md5"): "SEC008",
+    ("hashlib", "sha1"): "SEC009",
 }
 
 class SecurityAnalyzer(Analyzer):

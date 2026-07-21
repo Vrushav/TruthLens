@@ -349,3 +349,83 @@ hashlib.blake2b(data)
     issues = analyzer.analyze(block)
 
     assert len(issues) == 0
+
+
+def test_sha1_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import hashlib
+hashlib.sha1(data)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC009"
+
+
+def test_imported_sha1_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+from hashlib import sha1
+sha1(data)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC009"
+
+
+def test_sha1_alias_detection():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import hashlib as h
+h.sha1(data)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 1
+    assert issues[0].id == "SEC009"
+
+
+def test_sha512_not_detected():
+
+    analyzer = SecurityAnalyzer()
+
+    block = CodeBlock(
+        language="python",
+        code="""
+import hashlib
+hashlib.sha512(data)
+""",
+        start_line=1,
+        end_line=2,
+    )
+
+    issues = analyzer.analyze(block)
+
+    assert len(issues) == 0
+
