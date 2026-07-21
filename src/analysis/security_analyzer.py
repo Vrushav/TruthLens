@@ -10,6 +10,11 @@ ATTRIBUTE_CALL_RULES = {
     ("hashlib", "md5"): "SEC008",
 }
 
+NAME_CALL_RULES = {
+    ("pickle", "loads"): "SEC006",
+    ("yaml", "load"): "SEC007",
+    ("hashlib", "md5"): "SEC008",
+}
 
 class SecurityAnalyzer(Analyzer):
 
@@ -74,38 +79,41 @@ class SecurityAnalyzer(Analyzer):
 
         if node.func.id == "eval":
 
-            issues.append(IssueFactory.create("SEC001", line=node.lineno))
+            issues.append(
+                IssueFactory.create(
+                    "SEC001",
+                   line=node.lineno,
+                )
+            )
 
-        elif node.func.id == "exec":
+            return issues
 
-            issues.append(IssueFactory.create("SEC002", line=node.lineno))
-
-        elif node.func.id == "loads" and imports.get("loads") == "pickle":
-
-            issues.append(IssueFactory.create("SEC006", line=node.lineno))
-
-        elif node.func.id == "load" and imports.get("load") == "yaml":
-
-            issues.append(IssueFactory.create("SEC007", line=node.lineno))
-        elif (
-            node.func.id == "load"
-            and imports.get("load") == "yaml"
-        ):
-
-            issues.append(IssueFactory.create("SEC007", line=node.lineno))
-
-        elif (
-            node.func.id == "md5"
-            and imports.get("md5") == "hashlib"
-        ):
+        if node.func.id == "exec":
 
             issues.append(
                 IssueFactory.create(
-                    "SEC008",
+                    "SEC002",
                    line=node.lineno,
-        )
-    )
+                )
+            )
 
+            return issues
+
+        module = imports.get(node.func.id)
+
+        if module is None:
+            return issues
+
+        rule = NAME_CALL_RULES.get((module, node.func.id))
+
+        if rule:
+
+            issues.append(
+                IssueFactory.create(
+                    rule,
+                  line=node.lineno,
+                )
+            )
 
         return issues
 
