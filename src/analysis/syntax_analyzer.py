@@ -32,4 +32,5 @@ class SyntaxAnalyzer(Analyzer):
              )
         )
 
+        
         return issues

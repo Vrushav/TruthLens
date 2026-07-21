@@ -5,9 +5,9 @@ def main():
 
     sample_response = '''
 ```python
-name = input()
+password = "admin123"
 
-eval(name)
+print(password)
 ```
 '''
 

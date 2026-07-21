@@ -70,5 +70,17 @@ RULES = {
         "recommendation": "Use subprocess without shell=True whenever possible.",
         "references": ["Python subprocess documentation"]
     },
-    
+
+    "SEC004": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Hardcoded Credential",
+        "message": "A hardcoded credential was detected in the source code.",
+        "recommendation": "Store credentials in environment variables or a secure secret manager instead of embedding them in code.",
+        "references": [
+            "OWASP Secrets Management Cheat Sheet"
+        ]
+    }
+
 }
