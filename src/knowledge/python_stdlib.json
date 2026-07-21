@@ -1,0 +1,9 @@
+{
+    "valid": [
+        "open",
+        "print",
+        "len",
+        "range",
+        "enumerate"
+    ]
+}

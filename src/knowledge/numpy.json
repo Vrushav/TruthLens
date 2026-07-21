@@ -1,0 +1,10 @@
+{
+  "valid": [
+    "array",
+    "zeros",
+    "ones",
+    "mean",
+    "sum",
+    "linspace"
+  ]
+}
