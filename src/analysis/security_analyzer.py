@@ -9,22 +9,35 @@ class SecurityAnalyzer(Analyzer):
 
     def analyze(self, block: CodeBlock):
 
-        issues = []
-
         if block.language != "python":
-            return issues
+            return []
 
         try:
             tree = ast.parse(block.code)
         except SyntaxError:
-            return issues
+            return []
 
-        # -----------------------------------------
-        # Track imported names
-        # Example:
-        # from pickle import loads
-        # => imports["loads"] = "pickle"
-        # -----------------------------------------
+        imports = self._collect_imports(tree)
+
+        issues = []
+
+        for node in ast.walk(tree):
+
+            if isinstance(node, ast.Call):
+
+                issues.extend(self._check_name_calls(node, imports))
+
+                issues.extend(self._check_attribute_calls(node))
+
+            elif isinstance(node, ast.Assign):
+
+                issues.extend(self._check_assignments(node))
+
+        return issues
+
+    # ---------------------------------------------------------
+
+    def _collect_imports(self, tree):
 
         imports = {}
 
@@ -35,109 +48,109 @@ class SecurityAnalyzer(Analyzer):
                 if node.module:
 
                     for alias in node.names:
+
                         imports[alias.asname or alias.name] = node.module
 
-        # -----------------------------------------
-        # Analyze AST
-        # -----------------------------------------
+        return imports
 
-        for node in ast.walk(tree):
+    # ---------------------------------------------------------
 
-            if isinstance(node, ast.Call):
+    def _check_name_calls(self, node, imports):
 
-                # -------------------------
-                # Name-based calls
-                # -------------------------
+        issues = []
 
-                if isinstance(node.func, ast.Name):
+        if not isinstance(node.func, ast.Name):
+            return issues
 
-                    if node.func.id == "eval":
+        if node.func.id == "eval":
 
-                        issues.append(IssueFactory.create("SEC001", line=node.lineno))
+            issues.append(IssueFactory.create("SEC001", line=node.lineno))
 
-                    elif node.func.id == "exec":
+        elif node.func.id == "exec":
 
-                        issues.append(IssueFactory.create("SEC002", line=node.lineno))
+            issues.append(IssueFactory.create("SEC002", line=node.lineno))
 
-                    elif node.func.id == "loads" and imports.get("loads") == "pickle":
+        elif node.func.id == "loads" and imports.get("loads") == "pickle":
 
-                        issues.append(IssueFactory.create("SEC006", line=node.lineno))
+            issues.append(IssueFactory.create("SEC006", line=node.lineno))
 
-                # -------------------------
-                # Attribute-based calls
-                # -------------------------
+        return issues
 
-                elif isinstance(node.func, ast.Attribute):
+    # ---------------------------------------------------------
 
-                    # subprocess.run(..., shell=True)
+    def _check_attribute_calls(self, node):
 
-                    if node.func.attr == "run":
+        issues = []
 
-                        for keyword in node.keywords:
+        if not isinstance(node.func, ast.Attribute):
+            return issues
 
-                            if (
-                                keyword.arg == "shell"
-                                and isinstance(keyword.value, ast.Constant)
-                                and keyword.value.value is True
-                            ):
+        # subprocess.run(..., shell=True)
 
-                                issues.append(
-                                    IssueFactory.create("SEC003", line=node.lineno)
-                                )
+        if node.func.attr == "run":
 
-                    # os.system()
+            for keyword in node.keywords:
 
-                    elif (
-                        isinstance(node.func.value, ast.Name)
-                        and node.func.value.id == "os"
-                        and node.func.attr == "system"
-                    ):
+                if (
+                    keyword.arg == "shell"
+                    and isinstance(keyword.value, ast.Constant)
+                    and keyword.value.value is True
+                ):
 
-                        issues.append(IssueFactory.create("SEC005", line=node.lineno))
+                    issues.append(IssueFactory.create("SEC003", line=node.lineno))
 
-                    # pickle.loads()
+        # os.system()
 
-                    elif (
-                        isinstance(node.func.value, ast.Name)
-                        and node.func.value.id == "pickle"
-                        and node.func.attr == "loads"
-                    ):
+        elif (
+            isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "os"
+            and node.func.attr == "system"
+        ):
 
-                        issues.append(IssueFactory.create("SEC006", line=node.lineno))
+            issues.append(IssueFactory.create("SEC005", line=node.lineno))
 
-            # -------------------------
-            # Hardcoded credentials
-            # -------------------------
+        # pickle.loads()
 
-            elif isinstance(node, ast.Assign):
+        elif (
+            isinstance(node.func.value, ast.Name)
+            and node.func.value.id == "pickle"
+            and node.func.attr == "loads"
+        ):
 
-                for target in node.targets:
+            issues.append(IssueFactory.create("SEC006", line=node.lineno))
 
-                    if isinstance(target, ast.Name):
+        return issues
 
-                        variable_name = target.id.lower()
+    # ---------------------------------------------------------
 
-                        suspicious_names = {
-                            "password",
-                            "passwd",
-                            "pwd",
-                            "secret",
-                            "token",
-                            "api_key",
-                            "apikey",
-                            "access_key",
-                            "auth_token",
-                            "jwt_secret",
-                        }
+    def _check_assignments(self, node):
 
-                        if (
-                            variable_name in suspicious_names
-                            and isinstance(node.value, ast.Constant)
-                            and isinstance(node.value.value, str)
-                        ):
+        issues = []
 
-                            issues.append(
-                                IssueFactory.create("SEC004", line=node.lineno)
-                            )
+        suspicious_names = {
+            "password",
+            "passwd",
+            "pwd",
+            "secret",
+            "token",
+            "api_key",
+            "apikey",
+            "access_key",
+            "auth_token",
+            "jwt_secret",
+        }
+
+        for target in node.targets:
+
+            if not isinstance(target, ast.Name):
+                continue
+
+            if (
+                target.id.lower() in suspicious_names
+                and isinstance(node.value, ast.Constant)
+                and isinstance(node.value.value, str)
+            ):
+
+                issues.append(IssueFactory.create("SEC004", line=node.lineno))
 
         return issues
