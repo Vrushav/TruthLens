@@ -15,38 +15,24 @@ class HallucinationAnalyzer(Analyzer):
 
     def analyze(self, block: CodeBlock):
 
-        print("===== ANALYZE STARTED =====")
-
         issues = []
 
-        print("Language:", block.language)
-
         if block.language != "python":
-            print("Not Python")
             return issues
 
         try:
             tree = ast.parse(block.code)
-            print("AST parsed successfully")
         except SyntaxError:
-            print("Syntax Error")
             return issues
 
         imports = self._collect_imports(tree)
-        print("Imports:", imports)
 
         for node in ast.walk(tree):
-
-            print("AST Node:", type(node).__name__)
 
             if not isinstance(node, ast.Call):
                 continue
 
-            print("FOUND CALL")
-
             issues.extend(self._check_attribute_calls(node, imports))
-
-        print("Final Issues:", issues)
 
         return issues
 
@@ -76,16 +62,12 @@ class HallucinationAnalyzer(Analyzer):
 
     def _check_attribute_calls(self, node, imports):
 
-        print(">>> Entered _check_attribute_calls")
-
         issues = []
 
         if not isinstance(node.func, ast.Attribute):
-            print("Not an attribute call")
             return issues
 
         if not isinstance(node.func.value, ast.Name):
-            print("Attribute is not called on a Name")
             return issues
 
         module = imports.get(
@@ -93,21 +75,24 @@ class HallucinationAnalyzer(Analyzer):
             node.func.value.id,
         )
 
-        print("Module:", module)
-
         valid = self.loader.load(module)
-        print("Valid APIs:", valid)
 
         if not valid:
-            print("No APIs loaded!")
+            print(f"DEBUG -> No knowledge found for module: {module}")
             return issues
 
         method = node.func.attr
 
-        print("Method Called:", method)
-        print("Method Exists:", method in valid)
+        print(
+            f"DEBUG -> module={module}, "
+            f"method={method}, "
+            f"method_in_valid={method in valid}, "
+            f"valid={valid}"
+        )
 
         if method not in valid:
+
+            print("DEBUG -> Creating API001 issue")
 
             suggestion = self._get_suggestion(module, method)
 
@@ -117,16 +102,14 @@ class HallucinationAnalyzer(Analyzer):
                 else f"Check the official {module} documentation."
             )
 
-            issue = IssueFactory.create(
-                "API001",
-                message=f"{module}.{method}() does not exist.",
-                recommendation=recommendation,
-                line=node.lineno,
+            issues.append(
+                IssueFactory.create(
+                    "API001",
+                    message=f"{module}.{method}() does not exist.",
+                    recommendation=recommendation,
+                    line=node.lineno,
+                )
             )
-
-            print("Created Issue:", issue)
-
-            issues.append(issue)
 
         return issues
 
