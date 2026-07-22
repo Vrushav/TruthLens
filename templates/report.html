@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TruthLens Analysis Report</title>
+    <link rel="stylesheet" href="../static/report.css">
+</head>
+
+<body>
+
+    <div class="container">
+
+        <!-- Header -->
+        <header class="hero">
+
+            <div class="hero-left">
+                <h1>🛡 TruthLens</h1>
+                <p class="tagline">
+                    AI Trust Validation & Secure Code Analysis
+                </p>
+            </div>
+
+            <div class="hero-right">
+                <span class="version">Version 1.0</span>
+                <span class="report-type">HTML Analysis Report</span>
+            </div>
+
+        </header>
+
+        <!-- Dashboard Cards -->
+        <section class="dashboard">
+
+            <div class="dashboard-card">
+
+                <span class="card-title">
+                    Trust Score
+                </span>
+
+                <div class="trust-score">
+                    {{TRUST_SCORE}}
+                </div>
+
+            </div>
+
+            <div class="dashboard-card">
+
+                <span class="card-title">
+                    Production Ready
+                </span>
+
+                <div class="{{READY_CLASS}}">
+                    {{PRODUCTION_READY}}
+                </div>
+
+            </div>
+
+            <div class="dashboard-card">
+
+                <span class="card-title">
+                    Total Issues
+                </span>
+
+                <div class="issue-count">
+                    {{TOTAL_ISSUES}}
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- Trust Section -->
+        <section class="panel">
+
+            <h2>📊 Trust Assessment</h2>
+
+            <p class="panel-description">
+                The overall trust score reflects the confidence in the analyzed
+                source code after evaluating syntax, runtime behaviour,
+                security practices and hallucination risks.
+            </p>
+
+            <div class="trust-display">
+                {{TRUST_SCORE}}
+            </div>
+
+        </section>
+
+        <!-- Severity Summary -->
+        <section class="panel">
+
+            <h2>📈 Severity Overview</h2>
+
+            <p class="panel-description">
+                Distribution of issues detected during analysis.
+            </p>
+
+            {{SUMMARY_TABLE}}
+
+        </section>
+
+        <!-- Detailed Findings -->
+        <section class="panel">
+
+            <h2>🔍 Detailed Findings</h2>
+
+            <p class="panel-description">
+                Every detected issue includes its severity, analyzer,
+                confidence level and recommended remediation.
+            </p>
+
+            <div class="issues-container">
+
+                {{ISSUES}}
+
+            </div>
+
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+
+            <div>
+
+                <strong>TruthLens v1.0</strong>
+
+                <p>
+                    AI Trust Validation & Secure Code Analysis
+                </p>
+
+            </div>
+
+            <div class="footer-right">
+
+                Generated automatically by TruthLens
+
+            </div>
+
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

@@ -1,0 +1,149 @@
+from src.models.enums.analyzer_type import AnalyzerType
+from src.models.enums.category import Category
+from src.models.enums.severity import Severity
+
+
+RULES = {
+    "RUN001": {
+        "analyzer": AnalyzerType.RUNTIME,
+        "category": Category.RUNTIME,
+        "severity": Severity.CRITICAL,
+        "title": "Division by Zero",
+        "message": "Division by zero will raise ZeroDivisionError.",
+        "recommendation": "Ensure the denominator is not zero before dividing.",
+        "references": ["Python ZeroDivisionError"],
+    },
+    "SYN001": {
+        "analyzer": AnalyzerType.SYNTAX,
+        "category": Category.SYNTAX,
+        "severity": Severity.HIGH,
+        "title": "Syntax Error",
+        "message": "Python syntax is invalid.",
+        "recommendation": "Fix the syntax before executing the code.",
+        "references": ["Python Language Reference"],
+    },
+    "API001": {
+        "analyzer": AnalyzerType.HALLUCINATION,
+        "category": Category.HALLUCINATION,
+        "severity": Severity.HIGH,
+        "title": "Hallucinated API",
+        "message": "The referenced API does not exist.",
+        "recommendation": "Verify the API against the official documentation.",
+        "references": ["Official Python Documentation"],
+    },
+    "SEC001": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.CRITICAL,
+        "title": "Use of eval()",
+        "message": "eval() executes arbitrary code and can lead to code injection.",
+        "recommendation": "Avoid eval(). Use safer parsing methods such as ast.literal_eval() when appropriate.",
+        "references": ["Python Security Guidelines"],
+    },
+    "SEC002": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.CRITICAL,
+        "title": "Use of exec()",
+        "message": "exec() executes arbitrary Python code.",
+        "recommendation": "Avoid exec() unless absolutely necessary.",
+        "references": ["Python Security Guidelines"],
+    },
+    "SEC003": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "shell=True detected",
+        "message": "Using shell=True may lead to command injection.",
+        "recommendation": "Use subprocess without shell=True whenever possible.",
+        "references": ["Python subprocess documentation"],
+    },
+    "SEC004": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Hardcoded Credential",
+        "message": "A hardcoded credential was detected in the source code.",
+        "recommendation": "Store credentials in environment variables or a secure secret manager instead of embedding them in code.",
+        "references": ["OWASP Secrets Management Cheat Sheet"],
+    },
+    "SEC005": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Use of os.system()",
+        "message": "os.system() executes shell commands and may lead to command injection.",
+        "recommendation": "Prefer subprocess.run() without shell=True or safer APIs.",
+        "references": ["Python os module documentation"],
+    },
+    "SEC006": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.CRITICAL,
+        "title": "Unsafe pickle.loads()",
+        "message": "pickle.loads() can execute arbitrary code when deserializing untrusted data.",
+        "recommendation": "Avoid loading untrusted pickle data. Prefer safer serialization formats like JSON whenever possible.",
+        "references": [
+            "Python pickle documentation",
+            "OWASP Deserialization Cheat Sheet",
+        ],
+    },
+    "SEC007": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.CRITICAL,
+        "title": "Unsafe yaml.load()",
+        "message": "yaml.load() may deserialize untrusted YAML and can lead to arbitrary code execution.",
+        "recommendation": ("Use yaml.safe_load() when parsing untrusted YAML content."),
+        "references": [
+            "PyYAML Documentation",
+            "OWASP Deserialization Cheat Sheet",
+        ],
+    },
+    "SEC008": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Weak MD5 Hash Algorithm",
+        "message": "MD5 is cryptographically broken and should not be used for security-sensitive purposes.",
+        "recommendation": "Use SHA-256, SHA-3, or another modern cryptographic hash function instead.",
+        "references": [
+            "Python hashlib documentation",
+            "NIST SP 800-131A",
+            "OWASP Cryptographic Storage Cheat Sheet",
+        ],
+    },
+    "SEC009": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Weak SHA-1 Hash Algorithm",
+        "message": "SHA-1 is considered cryptographically weak and should not be used for security-sensitive purposes.",
+        "recommendation": "Use SHA-256, SHA-3, or another modern cryptographic hash function instead.",
+        "references": [
+            "Python hashlib documentation",
+            "NIST SP 800-131A",
+            "OWASP Cryptographic Storage Cheat Sheet",
+        ],
+    },
+    "SEC010": {
+        "analyzer": AnalyzerType.SECURITY,
+        "category": Category.SECURITY,
+        "severity": Severity.HIGH,
+        "title": "Weak Random Generator",
+        "message": (
+            "The random module is not cryptographically secure and "
+            "should not be used for passwords, tokens, OTPs, or other "
+            "security-sensitive values."
+        ),
+        "recommendation": (
+            "Use the secrets module instead, such as "
+            "secrets.token_hex(), secrets.randbelow(), or secrets.choice()."
+        ),
+        "references": [
+            "Python secrets documentation",
+            "Python random documentation",
+            "PEP 506",
+        ],
+    },
+}

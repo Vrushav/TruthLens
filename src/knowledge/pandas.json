@@ -1,0 +1,9 @@
+{
+    "valid": [
+        "read_csv",
+        "read_excel",
+        "DataFrame",
+        "concat",
+        "merge"
+    ]
+}
