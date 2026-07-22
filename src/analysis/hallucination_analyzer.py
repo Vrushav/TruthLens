@@ -1,5 +1,6 @@
 import ast
 import difflib
+from pathlib import Path
 
 from src.analysis.analyzer import Analyzer
 from src.analysis.issue_factory import IssueFactory
@@ -77,18 +78,24 @@ class HallucinationAnalyzer(Analyzer):
 
         valid = self.loader.load(module)
 
+        print("========== KNOWLEDGE DEBUG ==========")
+        print("Module:", module)
+        print("__file__:", __file__)
+        print("Current Working Directory:", Path.cwd())
+        print("Knowledge Path:", self.loader.base_path)
+        print("Knowledge Path Exists:", self.loader.base_path.exists())
+        print("Knowledge Files:", list(self.loader.base_path.glob("*.json")))
+        print("Loaded APIs:", valid)
+        print("=====================================")
+
         if not valid:
             print(f"DEBUG -> No knowledge found for module: {module}")
             return issues
 
         method = node.func.attr
 
-        print(
-            f"DEBUG -> module={module}, "
-            f"method={method}, "
-            f"method_in_valid={method in valid}, "
-            f"valid={valid}"
-        )
+        print(f"Method: {method}")
+        print(f"Method Exists: {method in valid}")
 
         if method not in valid:
 
