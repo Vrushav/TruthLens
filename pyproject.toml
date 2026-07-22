@@ -37,6 +37,8 @@ classifiers = [
     "Topic :: Scientific/Engineering :: Artificial Intelligence"
 ]
 
+dynamic = ["dependencies"]
+
 [project.urls]
 Homepage = "https://github.com/Vrushav/TruthLens"
 Repository = "https://github.com/Vrushav/TruthLens"
@@ -50,10 +52,8 @@ include-package-data = true
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = [
-    "truthlens*",
-    "src*"
-]
+include = ["truthlens*", "src*"]
+
 exclude = [
     "tests*",
     "archive*",
@@ -62,3 +62,11 @@ exclude = [
     "assets*",
     "examples*"
 ]
+
+[tool.setuptools.package-data]
+"src" = [
+    "knowledge/*.json"
+]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.txt"] }

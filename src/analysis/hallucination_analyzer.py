@@ -78,16 +78,6 @@ class HallucinationAnalyzer(Analyzer):
 
         valid = self.loader.load(module)
 
-        print("========== KNOWLEDGE DEBUG ==========")
-        print("Module:", module)
-        print("__file__:", __file__)
-        print("Current Working Directory:", Path.cwd())
-        print("Knowledge Path:", self.loader.base_path)
-        print("Knowledge Path Exists:", self.loader.base_path.exists())
-        print("Knowledge Files:", list(self.loader.base_path.glob("*.json")))
-        print("Loaded APIs:", valid)
-        print("=====================================")
-
         if not valid:
             print(f"DEBUG -> No knowledge found for module: {module}")
             return issues
