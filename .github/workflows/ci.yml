@@ -46,7 +46,11 @@ jobs:
       - name: Verify CLI
         run: |
           truthlens --help
-
+      
+      - name: Debug knowledge files
+        run: |
+          python -c "from src.services.knowledge_loader import KnowledgeLoader; l=KnowledgeLoader(); print('Base Path:', l.base_path); print('Requests:', l.load('requests')); print('Pandas:', l.load('pandas')); print('NumPy:', l.load('numpy'))"
+      
       - name: Run Tests
         env:
             TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
