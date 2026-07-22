@@ -50,3 +50,9 @@ jobs:
       - name: Run Tests
         run: |
           pytest
+
+      - name: Run Tests
+        env:
+            TAVILY_API_KEY: ${{ secrets.TAVILY_API_KEY }}
+        run: |
+            pytest
